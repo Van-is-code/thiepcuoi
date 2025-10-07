@@ -13,10 +13,11 @@ app.use(bodyParser.json());
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: 'shinkansen.proxy.rlwy.net',
+  port: 41461,
   user: 'root',
-  password: '',
-  database: 'wedding_db'
+  password: 'BZQAVvMfOBbhtxHuuzAQxCvWoprmyjNM',
+  database: 'railway'
 });
 
 db.connect((err) => {
@@ -25,6 +26,23 @@ db.connect((err) => {
     return;
   }
   console.log('Connected to database.');
+    // Auto create guests table if not exists
+    const createTableSQL = `CREATE TABLE IF NOT EXISTS guests (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      message TEXT NOT NULL,
+      will_attend VARCHAR(255),
+      accompany VARCHAR(255),
+      guest_of VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`;
+    db.query(createTableSQL, (err) => {
+      if (err) {
+        console.error('Failed to create guests table:', err);
+      } else {
+        console.log('Guests table ready.');
+      }
+    });
 });
 
 // API endpoint to save form data
@@ -43,8 +61,29 @@ app.post('/api/save', (req, res) => {
   });
 });
 
+
 // Serve static files for all folders (keep structure)
 app.use(express.static(__dirname));
+
+// Serve confirm_participation.html at /confirm_participation
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/confirm_participation.html');
+});
+
+
+app.get('/music', (req, res) => {
+  res.sendFile(__dirname + '/camcui.vn/congthanhwedding/file/music.mp3');
+});
+// API: get all guests
+app.get('/api/guests', (req, res) => {
+  db.query('SELECT * FROM guests ORDER BY created_at DESC', (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json([]);
+    }
+    res.json(results);
+  });
+});
 
 
 
@@ -59,5 +98,5 @@ app.use((req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at https://demothiepcuoi-production.up.railway.app:${port}`);
 });

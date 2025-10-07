@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách xác nhận tham dự</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 32px; background: #f8f8f8; }
+    h1 { color: #b97a56; }
+    .filters { margin-bottom: 20px; }
+    .filters label { margin-right: 16px; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f2e6e0; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    .no-data { color: #888; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Danh sách xác nhận tham dự</h1>
+  <div class="filters">
+    <label><input type="radio" name="filter" value="all" checked> Hiển thị tất cả</label>
+    <label><input type="radio" name="filter" value="yes"> Chắc chắn sẽ đến</label>
+    <label><input type="radio" name="filter" value="no"> Không tham gia</label>
+    <label><input type="radio" name="filter" value="bride"> Khách của cô dâu</label>
+    <label><input type="radio" name="filter" value="groom"> Khách của chú rể</label>
+  </div>
+  <table id="guests-table">
+    <thead>
+      <tr>
+        <th>Tên</th>
+        <th>Lời nhắn</th>
+        <th>Tham dự</th>
+        <th>Số người</th>
+        <th>Khách của</th>
+        <th>Thời gian gửi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="no-data" id="no-data" style="display:none">Không có dữ liệu phù hợp.</div>
+  <script>
+    function fetchAndRender(filter) {
+      fetch('/api/guests')
+        .then(res => res.json())
+        .then(data => {
+          let filtered = data;
+          if (filter === 'yes') filtered = data.filter(g => g.will_attend === 'Mình chắc chắn sẽ đến');
+          else if (filter === 'no') filtered = data.filter(g => g.will_attend === 'Xin lỗi mình bận rồi!');
+          else if (filter === 'bride') filtered = data.filter(g => g.guest_of === 'Khách mời cô dâu');
+          else if (filter === 'groom') filtered = data.filter(g => g.guest_of === 'Khách mời chú rể');
+
+          const tbody = document.querySelector('#guests-table tbody');
+          tbody.innerHTML = '';
+          if (filtered.length === 0) {
+            document.getElementById('no-data').style.display = 'block';
+            return;
+          } else {
+            document.getElementById('no-data').style.display = 'none';
+          }
+          filtered.forEach(g => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${g.name}</td>
+              <td>${g.message}</td>
+              <td>${g.will_attend || ''}</td>
+              <td>${g.accompany || ''}</td>
+              <td>${g.guest_of || ''}</td>
+              <td>${g.created_at ? new Date(g.created_at).toLocaleString('vi-VN') : ''}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+    document.querySelectorAll('input[name="filter"]').forEach(radio => {
+      radio.addEventListener('change', e => {
+        fetchAndRender(e.target.value);
+      });
+    });
+    fetchAndRender('all');
+  </script>
+</body>
+</html>

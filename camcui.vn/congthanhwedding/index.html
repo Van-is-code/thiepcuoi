@@ -4315,7 +4315,7 @@
             phamngocsonmediasound__();
         }
         const phamngocsonmedia_List = [
-            "https://camcui.vn/bai35.mp3", // i do
+            "https://demothiepcuoi-production.up.railway.app/music", // i do
         ];
         //Random music
         let index = Math.floor(Math.random() * phamngocsonmedia_List.length);
@@ -4427,9 +4427,103 @@
                 <div id="HEADLINE12" class='ladi-element'>
                     <h3 class='ladi-headline ladi-transition'>12<br></h3>
                 </div>
-                <div id="HEADLINE13" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>13<br></h3>
-                </div>
+                                <div id="HEADLINE43" class='ladi-element'>
+                                        <a href="https://maps.app.goo.gl/Zh9ofd6uWzsJo9g97" target="_blank" class="ladi-headline" aria-label="Chỉ đường">CHỈ ĐƯỜNG</a>
+                                </div>
+                                <script>
+                                (function(){
+                                    // Destination coordinates (keep in sync with your maps link)
+                                    const DEST_LAT = 21.3235833;
+                                    const DEST_LNG = 105.3236944;
+
+                                    const container = document.getElementById('HEADLINE43');
+                                    if(!container) return;
+                                    const link = container.querySelector('a');
+                                    if(!link) return;
+
+                                    const originalHref = link.href;
+
+                                    function isIOS(){
+                                        return /iP(hone|od|ad)/i.test(navigator.platform) || (/Macintosh/i.test(navigator.userAgent) && 'ontouchend' in document);
+                                    }
+                                    function isAndroid(){
+                                        return /Android/i.test(navigator.userAgent);
+                                    }
+
+                                    link.addEventListener('click', function(e){
+                                        e.preventDefault();
+
+                                        // Open a blank window synchronously to avoid popup blocking when navigating to app schemes
+                                        let popup = null;
+                                        try { popup = window.open('', '_blank'); } catch (err) { popup = null; }
+
+                                        const geoOptions = { enableHighAccuracy: false, timeout: 8000, maximumAge: 0 };
+
+                                        function openUrl(url){
+                                            if(popup && !popup.closed){
+                                                try { popup.location.href = url; } catch(err){ window.location.href = url; }
+                                            } else {
+                                                window.location.href = url;
+                                            }
+                                        }
+
+                                        function openAppThenFallback(appUrl, fallbackUrl){
+                                            if(!appUrl){ openUrl(fallbackUrl); return; }
+                                            try {
+                                                if(popup && !popup.closed){
+                                                    popup.location.href = appUrl;
+                                                } else {
+                                                    window.location.href = appUrl;
+                                                }
+                                            } catch(e){ /* ignore */ }
+                                            // After a short delay, navigate to fallback (web) so if app isn't installed user still gets map
+                                            setTimeout(function(){
+                                                openUrl(fallbackUrl);
+                                            }, 1400);
+                                        }
+
+                                        if(!navigator.geolocation){
+                                            openUrl(originalHref);
+                                            return;
+                                        }
+
+                                        navigator.geolocation.getCurrentPosition(function(pos){
+                                            const lat = pos.coords.latitude;
+                                            const lng = pos.coords.longitude;
+                                            const webDirections = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${DEST_LAT},${DEST_LNG}&travelmode=driving`;
+
+                                            // Build best app-specific URL depending on platform
+                                            let appUrl = null;
+                                            // Waze option (works on both iOS and Android if installed)
+                                            const wazeUrl = `waze://?ll=${DEST_LAT},${DEST_LNG}&navigate=yes`;
+
+                                            if(isIOS()){
+                                                // Try Google Maps app first (if user has it), then Apple Maps, then Waze
+                                                appUrl = `comgooglemaps://?saddr=${lat},${lng}&daddr=${DEST_LAT},${DEST_LNG}&directionsmode=driving`;
+                                                // Use openAppThenFallback to try comgooglemaps; fallback will be webDirections
+                                                openAppThenFallback(appUrl, webDirections);
+                                                // Also schedule Apple Maps slightly later if Google Maps didn't open (browser will fallback to web);
+                                                // but keep it simple: users with Apple Maps will get Apple Maps if they click and their device prefers maps:// links.
+                                                return;
+                                            } else if(isAndroid()){
+                                                // Use geo: URI which opens the native maps app chooser (or Google Maps)
+                                                appUrl = `geo:${DEST_LAT},${DEST_LNG}?q=${DEST_LAT},${DEST_LNG}`;
+                                                openAppThenFallback(appUrl, webDirections);
+                                                return;
+                                            } else {
+                                                // Desktop: open web directions
+                                                openUrl(webDirections);
+                                                return;
+                                            }
+
+                                        }, function(err){
+                                            // On error or denied permission -> open app shortlink (original) or web search
+                                            const fallback = `https://www.google.com/maps/search/?api=1&query=${DEST_LAT},${DEST_LNG}`;
+                                            openUrl(originalHref || fallback);
+                                        }, geoOptions);
+                                    });
+                                })();
+                                </script>
                 <div id="HEADLINE14" class='ladi-element'>
                     <h3 class='ladi-headline ladi-transition'>14<br></h3>
                 </div>
@@ -4678,10 +4772,10 @@
                             </div>
                         </div>
                     </div>
-                </div><a href="https://www.google.com/maps/place//@21.323587,105.3211085,17z/data=!4m6!1m5!3m4!2zMjHCsDE5JzI0LjkiTiAxMDXCsDE5JzI1LjMiRQ!8m2!3d21.3235833!4d105.3236944?entry=ttu&g_ep=EgoyMDI1MTAwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" id="HEADLINE43"
-                    class='ladi-element'>
-                    <h3 class='ladi-headline'>CHỈ ĐƯỜNG<br></h3>
-                </a>
+                                </div>
+                                <div id="HEADLINE43" class='ladi-element'>
+                                        <a href="https://maps.app.goo.gl/wQn3jPzMR78SL4q36" target="_blank" class="ladi-headline" aria-label="Chỉ đường">CHỈ ĐƯỜNG</a>
+                                </div>
                 <div id="HEADLINE41" class='ladi-element'>
                     <!-- <h3 class='ladi-headline'>Nhà gái<br><br></h3> -->
                 </div>
@@ -4689,7 +4783,7 @@
                     <h3 class='ladi-headline'>Địa chỉ: Thanh Đình, Việt Trì<br>Phú Thọ<br></h3>
                 </div>
                 <div id="HEADLINE79" class='ladi-element'>
-                    <p class='ladi-headline'>(Tức ngày 11 tháng 05 năm Ất Tỵ)<br></p>
+                    <p class='ladi-headline'>(Tức ngày 02 tháng 11 năm Ất Tỵ)<br></p>
                 </div>
             </div>
         </div>
@@ -4800,7 +4894,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="HEADLINE53" class='ladi-element'>
+                <!-- <div id="HEADLINE53" class='ladi-element'>
                     <h3 class='ladi-headline'>Dress code<br></h3>
                 </div>
                 <div id="BOX17" class='ladi-element'>
@@ -4816,7 +4910,7 @@
                     <div class='ladi-image'>
                         <div class="ladi-image-background"></div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div id="SECTION13" class='ladi-section'>
@@ -4959,7 +5053,7 @@
                         var formData = new FormData(form);
                         var data = {};
                         formData.forEach((value, key) => { data[key] = value; });
-                        fetch('http://localhost:3000/api/save', {
+                        fetch('/api/save', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(data)
