@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Danh sách xác nhận tham dự</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Animate.css -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --wedding-primary: #5a7556;
+      --wedding-secondary: #4a6047;
+      --wedding-accent: #e8f0e7;
+      --wedding-light: #f5f9f5;
+      --wedding-text: #4a4a4a;
+      --wedding-border: #d0e0cf;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f5f9f5 0%, #e8f0e7 100%);
+      min-height: 100vh;
+      color: var(--wedding-text);
+      padding-bottom: 3rem;
+    }
+    
+    .header-section {
+      background: linear-gradient(135deg, var(--wedding-primary) 0%, var(--wedding-secondary) 100%);
+      color: white;
+      padding: 2.5rem 0;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-weight: 300;
+    }
+    
+    .filter-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border: 1px solid var(--wedding-border);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .filter-header {
+      background: transparent;
+      padding: 0.8rem 1.2rem;
+      border-bottom: 1px solid var(--wedding-border);
+    }
+    
+    .filter-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      margin: 0;
+      color: var(--wedding-text);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .filter-body {
+      padding: 1.2rem;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      color: var(--wedding-secondary);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .form-control, .form-select {
+      border: 1px solid var(--wedding-border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--wedding-primary);
+      box-shadow: 0 0 0 0.2rem rgba(90, 117, 86, 0.25);
+    }
+    
+    .btn-wedding-primary {
+      background: linear-gradient(135deg, var(--wedding-primary) 0%, var(--wedding-secondary) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(90, 117, 86, 0.3);
+    }
+    
+    .btn-wedding-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(90, 117, 86, 0.4);
+      color: white;
+    }
+    
+    .btn-wedding-outline {
+      background: white;
+      color: var(--wedding-primary);
+      border: 2px solid var(--wedding-primary);
+      border-radius: 8px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-wedding-outline:hover {
+      background: var(--wedding-primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .stats-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--wedding-border);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .stats-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--wedding-primary);
+      line-height: 1;
+    }
+    
+    .stats-label {
+      font-size: 0.85rem;
+      color: var(--wedding-text);
+      margin-top: 0.3rem;
+      font-weight: 400;
+    }
+    
+    .table-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+      border: 1px solid var(--wedding-border);
+      overflow: hidden;
+    }
+    
+    .table {
+      margin: 0;
+    }
+    
+    .table thead th {
+      background: var(--wedding-accent);
+      color: var(--wedding-secondary);
+      font-weight: 600;
+      border: none;
+      padding: 1rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .table tbody td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-color: var(--wedding-border);
+    }
+    
+    .table tbody tr {
+      transition: all 0.2s ease;
+    }
+    
+    .table tbody tr:hover {
+      background-color: var(--wedding-light);
+      transform: scale(1.01);
+    }
+    
+    .guest-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--wedding-border);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .guest-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .guest-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--wedding-secondary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .badge-status {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    
+    .badge-yes {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-no {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .badge-maybe {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .no-data-section {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: 15px;
+      border: 2px dashed var(--wedding-border);
+    }
+    
+    .no-data-icon {
+      font-size: 4rem;
+      color: var(--wedding-border);
+      margin-bottom: 1rem;
+    }
+    
+    /* Loading Spinner */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(5px);
+    }
+    
+    .spinner-wrapper {
+      text-align: center;
+    }
+    
+    .spinner-border-custom {
+      width: 4rem;
+      height: 4rem;
+      border: 0.4rem solid var(--wedding-accent);
+      border-top-color: var(--wedding-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .spinner-text {
+      margin-top: 1rem;
+      color: var(--wedding-secondary);
+      font-weight: 500;
+    }
+    
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+    }
+    
+    .custom-toast {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+      border-left: 4px solid var(--wedding-primary);
+      min-width: 300px;
+      animation: slideInRight 0.3s ease;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .toast-header-custom {
+      background: var(--wedding-accent);
+      border-bottom: 1px solid var(--wedding-border);
+      padding: 0.75rem 1rem;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .toast-body-custom {
+      padding: 1rem;
+      color: var(--wedding-text);
+    }
+    
+    /* Pagination */
+    .pagination-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+    
+    .pagination {
+      margin: 0;
+    }
+    
+    .page-link {
+      color: var(--wedding-primary);
+      border: 1px solid var(--wedding-border);
+      padding: 0.5rem 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .page-link:hover {
+      background-color: var(--wedding-accent);
+      color: var(--wedding-secondary);
+      border-color: var(--wedding-primary);
+    }
+    
+    .page-item.active .page-link {
+      background: linear-gradient(135deg, var(--wedding-primary) 0%, var(--wedding-secondary) 100%);
+      border-color: var(--wedding-primary);
+    }
+    
+    .page-size-select {
+      max-width: 120px;
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+      }
+      
+      .header-section {
+        background: white !important;
+        color: var(--wedding-text) !important;
+        box-shadow: none !important;
+      }
+      
+      .filter-card, .pagination-wrapper, .btn, .stats-card {
+        display: none !important;
+      }
+      
+      .table-card {
+        box-shadow: none !important;
+      }
+      
+      .table tbody tr:hover {
+        background-color: transparent !important;
+      }
+      
+      @page {
+        margin: 1cm;
+      }
+    }
+    
+    /* Advanced Filters Toggle */
+    .advanced-filters {
+      background: var(--wedding-light);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px dashed var(--wedding-border);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 1.8rem;
+      }
+      
+      .filter-body {
+        padding: 1rem;
+      }
+      
+      .stats-number {
+        font-size: 1.5rem;
+      }
+      
+      .toast-container {
+        right: 10px;
+        left: 10px;
+      }
+      
+      .custom-toast {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="spinner-wrapper">
+      <div class="spinner-border-custom"></div>
+      <div class="spinner-text">
+        <i class="fas fa-heart fa-beat"></i> Đang tải dữ liệu...
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Header -->
+  <div class="header-section">
+    <div class="container">
+      <div class="text-center animate__animated animate__fadeInDown">
+        <i class="fas fa-heart fa-2x mb-3" style="opacity: 0.9;"></i>
+        <h1 class="header-title">Danh sách xác nhận tham dự</h1>
+        <p class="header-subtitle">Quản lý thông tin khách mời tham dự tiệc cưới</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Filter Section -->
+    <div class="filter-card animate__animated animate__fadeInUp">
+      <div class="filter-header">
+        <h2 class="filter-title">
+          <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
+        </h2>
+      </div>
+      <div class="filter-body">
+        <div class="row g-3">
+          <!-- Search Text -->
+          <div class="col-lg-6">
+            <label class="form-label">
+              <i class="fas fa-search me-1"></i>Tìm theo tên / lời nhắn
+            </label>
+            <input type="text" id="searchText" class="form-control" placeholder="Nhập tên hoặc nội dung...">
+          </div>
+
+          <!-- Attendance Status -->
+          <div class="col-lg-3 col-md-6">
+            <label class="form-label">
+              <i class="fas fa-check-circle me-1"></i>Trạng thái tham dự
+            </label>
+            <select id="willAttendSelect" class="form-select">
+              <option value="all">Tất cả</option>
+              <option value="yes">Chắc chắn sẽ đến</option>
+              <option value="no">Không tham gia</option>
+              <option value="maybe">Khác / Có thể</option>
+            </select>
+          </div>
+
+          <!-- Guest Of -->
+          <div class="col-lg-3 col-md-6">
+            <label class="form-label">
+              <i class="fas fa-user-friends me-1"></i>Khách của
+            </label>
+            <select id="guestOfSelect" class="form-select">
+              <option value="all">Tất cả</option>
+              <option value="bride">Khách mời cô dâu</option>
+              <option value="groom">Khách mời chú rể</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+
+          <!-- Toggle Advanced Filters -->
+          <div class="col-12">
+            <button class="btn btn-wedding-outline btn-sm" id="toggleAdvanced">
+              <i class="fas fa-sliders-h me-2"></i>Bộ lọc nâng cao
+              <i class="fas fa-chevron-down ms-1"></i>
+            </button>
+          </div>
+
+          <!-- Advanced Filters -->
+          <div id="advancedFilters" class="col-12" style="display:none;">
+            <div class="advanced-filters">
+              <div class="row g-3">
+                <!-- Accompany Count -->
+                <div class="col-lg-4 col-md-6">
+                  <label class="form-label">
+                    <i class="fas fa-users me-1"></i>Số người (kèm theo)
+                  </label>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <input type="number" id="accompanyMin" class="form-control" min="0" placeholder="Tối thiểu">
+                    </div>
+                    <div class="col-6">
+                      <input type="number" id="accompanyMax" class="form-control" min="0" placeholder="Tối đa">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="col-lg-8 col-md-6">
+                  <label class="form-label">
+                    <i class="fas fa-calendar-alt me-1"></i>Khoảng thời gian gửi
+                  </label>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <input type="date" id="dateFrom" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <input type="date" id="dateTo" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="col-12">
+            <div class="d-flex gap-2 flex-wrap">
+              <button id="applyBtn" class="btn btn-wedding-primary">
+                <i class="fas fa-check me-2"></i>Áp dụng
+              </button>
+              <button id="resetBtn" class="btn btn-wedding-outline">
+                <i class="fas fa-redo me-2"></i>Reset
+              </button>
+              <button id="exportBtn" class="btn btn-wedding-primary">
+                <i class="fas fa-file-excel me-2"></i>Export Excel
+              </button>
+              <button id="printBtn" style="display:none;" class="btn btn-wedding-outline">
+                <i class="fas fa-print me-2"></i>In
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stats-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+          <div class="stats-number" id="totalCount">0</div>
+          <div class="stats-label">
+            <i class="fas fa-list me-1"></i>Tổng số khách
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+          <div class="stats-number" id="filteredCount">0</div>
+          <div class="stats-label">
+            <i class="fas fa-filter me-1"></i>Kết quả lọc
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+          <div class="stats-number" id="attendingCount">0</div>
+          <div class="stats-label">
+            <i class="fas fa-check-circle me-1"></i>Xác nhận tham dự
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Table -->
+    <div class="table-card d-none d-lg-block animate__animated animate__fadeInUp" id="tableView" style="animation-delay: 0.4s;">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user me-2"></i>Tên</th>
+              <th><i class="fas fa-comment me-2"></i>Lời nhắn</th>
+              <th><i class="fas fa-check-circle me-2"></i>Tham dự</th>
+              <th><i class="fas fa-users me-2"></i>Số người</th>
+              <th><i class="fas fa-user-friends me-2"></i>Khách của</th>
+              <th><i class="fas fa-clock me-2"></i>Thời gian</th>
+            </tr>
+          </thead>
+          <tbody id="guestsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div id="listCards" class="d-lg-none"></div>
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper" id="paginationWrapper" style="display:none;">
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 small">Hiển thị:</label>
+        <select id="pageSize" class="form-select form-select-sm page-size-select">
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+      <ul class="pagination mb-0" id="pagination"></ul>
+    </div>
+
+    <!-- No Data -->
+    <div id="noData" class="no-data-section animate__animated animate__fadeIn" style="display:none">
+      <div class="no-data-icon">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <h4 style="color: var(--wedding-secondary);">Không có dữ liệu phù hợp</h4>
+      <p class="text-muted">Vui lòng thử lại với bộ lọc khác</p>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- SheetJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    let lastFetched = [];
+    let currentPage = 1;
+    let pageSize = 25;
+
+    function showLoading() {
+      document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function showToast(message, type = 'success') {
+      const toastContainer = document.getElementById('toastContainer');
+      const iconMap = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+      };
+      const colorMap = {
+        success: '#28a745',
+        error: '#dc3545',
+        info: '#17a2b8'
+      };
+      
+      const toastEl = document.createElement('div');
+      toastEl.className = 'custom-toast mb-2';
+      toastEl.innerHTML = `
+        <div class="toast-header-custom">
+          <i class="fas ${iconMap[type]} me-2" style="color: ${colorMap[type]}"></i>
+          <strong class="me-auto">Thông báo</strong>
+          <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.parentElement.remove()"></button>
+        </div>
+        <div class="toast-body-custom">${message}</div>
+      `;
+      
+      toastContainer.appendChild(toastEl);
+      
+      setTimeout(() => {
+        toastEl.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => toastEl.remove(), 300);
+      }, 3000);
+    }
+
+    function parseDate(val) {
+      if (!val) return null;
+      const d = new Date(val);
+      if (!isNaN(d)) return d;
+      const d2 = new Date(val.replace(' ', 'T'));
+      return isNaN(d2) ? null : d2;
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    function getStatusBadge(willAttend) {
+      const val = (willAttend || '').toLowerCase();
+      const willMap = {
+        yes: ['mình chắc chắn sẽ đến','chắc chắn sẽ đến','có thể đến','đi','có'],
+        no: ['xin lỗi mình bận','không tham gia','không thể']
+      };
+      
+      if (willMap.yes.some(s => val.includes(s))) {
+        return '<span class="badge badge-status badge-yes"><i class="fas fa-check-circle me-1"></i>Tham dự</span>';
+      } else if (willMap.no.some(s => val.includes(s))) {
+        return '<span class="badge badge-status badge-no"><i class="fas fa-times-circle me-1"></i>Không đến</span>';
+      } else {
+        return '<span class="badge badge-status badge-maybe"><i class="fas fa-question-circle me-1"></i>Chưa rõ</span>';
+      }
+    }
+
+    function buildFilterPredicate() {
+      const text = (document.getElementById('searchText').value || '').trim().toLowerCase();
+      const will = document.getElementById('willAttendSelect').value;
+      const guestOf = document.getElementById('guestOfSelect').value;
+      const minA = parseInt(document.getElementById('accompanyMin').value, 10);
+      const maxA = parseInt(document.getElementById('accompanyMax').value, 10);
+      const dateFromVal = document.getElementById('dateFrom').value;
+      const dateToVal = document.getElementById('dateTo').value;
+      const dateFrom = dateFromVal ? new Date(dateFromVal + 'T00:00:00') : null;
+      const dateTo = dateToVal ? new Date(dateToVal + 'T23:59:59.999') : null;
+
+      const willMap = {
+        yes: ['mình chắc chắn sẽ đến','chắc chắn sẽ đến','có thể đến','đi','có'],
+        no: ['xin lỗi mình bận','không tham gia','không thể']
+      };
+
+      return function(g) {
+        if (text) {
+          const hay = ((g.name||'') + ' ' + (g.message||'')).toLowerCase();
+          if (!hay.includes(text)) return false;
+        }
+
+        if (will !== 'all') {
+          const val = (g.will_attend || '').toLowerCase();
+          if (will === 'yes') {
+            if (!willMap.yes.some(s => val.includes(s))) return false;
+          } else if (will === 'no') {
+            if (!willMap.no.some(s => val.includes(s))) return false;
+          } else if (will === 'maybe') {
+            const isYes = willMap.yes.some(s => (g.will_attend||'').toLowerCase().includes(s));
+            const isNo = willMap.no.some(s => (g.will_attend||'').toLowerCase().includes(s));
+            if (isYes || isNo) return false;
+          }
+        }
+
+        if (guestOf !== 'all') {
+          const val = (g.guest_of||'').toLowerCase();
+          if (guestOf === 'bride' && !val.includes('cô dâu') && !val.includes('côdâu')) return false;
+          if (guestOf === 'groom' && !val.includes('chú rể') && !val.includes('chúrể')) return false;
+          if (guestOf === 'other' && (val.includes('cô dâu') || val.includes('chú rể') || val.includes('côdâu') || val.includes('chúrể'))) return false;
+        }
+
+        const acomp = (() => {
+          const n = parseInt((g.accompany||'').toString().replace(/[^\d-]/g,''), 10);
+          return isNaN(n) ? 0 : n;
+        })();
+        if (!isNaN(minA) && minA !== 0) {
+          if (acomp < minA) return false;
+        }
+        if (!isNaN(maxA)) {
+          if (acomp > maxA) return false;
+        }
+
+        const dt = parseDate(g.created_at);
+        if (dateFrom && (!dt || dt < dateFrom)) return false;
+        if (dateTo && (!dt || dt > dateTo)) return false;
+
+        return true;
+      };
+    }
+
+    async function fetchAndRender() {
+      showLoading();
+      try {
+        const res = await fetch('/api/guests');
+        const data = await res.json();
+        lastFetched = Array.isArray(data) ? data : [];
+        currentPage = 1;
+        renderCurrentPage();
+        hideLoading();
+      } catch (err) {
+        console.error(err);
+        hideLoading();
+        showToast('Lỗi khi tải dữ liệu. Vui lòng thử lại!', 'error');
+        document.getElementById('noData').style.display = 'block';
+        document.getElementById('noData').innerHTML = `
+          <div class="no-data-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <h4 style="color: var(--wedding-secondary);">Lỗi khi tải dữ liệu</h4>
+          <p class="text-muted">Vui lòng thử lại sau</p>
+        `;
+      }
+    }
+
+    function renderCurrentPage() {
+      const predicate = buildFilterPredicate();
+      const filtered = lastFetched.filter(predicate);
+
+      filtered.sort((a,b) => {
+        const da = parseDate(a.created_at), db = parseDate(b.created_at);
+        if (!da && !db) return 0;
+        if (!da) return 1;
+        if (!db) return -1;
+        return db - da;
+      });
+
+      const totalPages = Math.ceil(filtered.length / pageSize);
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = startIdx + pageSize;
+      const pageData = filtered.slice(startIdx, endIdx);
+
+      renderTable(pageData);
+      renderCards(pageData);
+      updateStats(filtered);
+      renderPagination(filtered.length, totalPages);
+
+      const hasData = filtered.length > 0;
+      document.getElementById('tableView').style.display = hasData ? 'block' : 'none';
+      document.getElementById('listCards').style.display = hasData ? 'block' : 'none';
+      document.getElementById('noData').style.display = hasData ? 'none' : 'block';
+      document.getElementById('paginationWrapper').style.display = hasData && totalPages > 1 ? 'flex' : 'none';
+    }
+
+    function renderPagination(totalItems, totalPages) {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+
+      if (totalPages <= 1) return;
+
+      // Previous button
+      const prevLi = document.createElement('li');
+      prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+      prevLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>`;
+      if (currentPage > 1) {
+        prevLi.querySelector('a').onclick = (e) => {
+          e.preventDefault();
+          currentPage--;
+          renderCurrentPage();
+        };
+      }
+      pagination.appendChild(prevLi);
+
+      // Page numbers
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+
+      if (startPage > 1) {
+        const li = createPageItem(1);
+        pagination.appendChild(li);
+        if (startPage > 2) {
+          const dotsLi = document.createElement('li');
+          dotsLi.className = 'page-item disabled';
+          dotsLi.innerHTML = '<a class="page-link">...</a>';
+          pagination.appendChild(dotsLi);
+        }
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        const li = createPageItem(i);
+        pagination.appendChild(li);
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          const dotsLi = document.createElement('li');
+          dotsLi.className = 'page-item disabled';
+          dotsLi.innerHTML = '<a class="page-link">...</a>';
+          pagination.appendChild(dotsLi);
+        }
+        const li = createPageItem(totalPages);
+        pagination.appendChild(li);
+      }
+
+      // Next button
+      const nextLi = document.createElement('li');
+      nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>`;
+      if (currentPage < totalPages) {
+        nextLi.querySelector('a').onclick = (e) => {
+          e.preventDefault();
+          currentPage++;
+          renderCurrentPage();
+        };
+      }
+      pagination.appendChild(nextLi);
+    }
+
+    function createPageItem(pageNum) {
+      const li = document.createElement('li');
+      li.className = `page-item ${currentPage === pageNum ? 'active' : ''}`;
+      li.innerHTML = `<a class="page-link" href="#">${pageNum}</a>`;
+      if (currentPage !== pageNum) {
+        li.querySelector('a').onclick = (e) => {
+          e.preventDefault();
+          currentPage = pageNum;
+          renderCurrentPage();
+        };
+      }
+      return li;
+    }
+
+    function updateStats(filtered) {
+      document.getElementById('totalCount').textContent = lastFetched.length;
+      document.getElementById('filteredCount').textContent = filtered.length;
+      
+      const willMap = {
+        yes: ['mình chắc chắn sẽ đến','chắc chắn sẽ đến','có thể đến','đi','có']
+      };
+      const attending = filtered.filter(g => {
+        const val = (g.will_attend || '').toLowerCase();
+        return willMap.yes.some(s => val.includes(s));
+      }).length;
+      document.getElementById('attendingCount').textContent = attending;
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('guestsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      
+      for (const g of list) {
+        const tr = document.createElement('tr');
+        const dt = parseDate(g.created_at);
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(g.name)}</strong></td>
+          <td>${escapeHtml(g.message)}</td>
+          <td>${getStatusBadge(g.will_attend)}</td>
+          <td><i class="fas fa-user-friends me-1"></i>${escapeHtml(g.accompany||'0')}</td>
+          <td>${escapeHtml(g.guest_of||'')}</td>
+          <td><small class="text-muted">${dt ? dt.toLocaleString('vi-VN') : ''}</small></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function renderCards(list) {
+      const container = document.getElementById('listCards');
+      container.innerHTML = '';
+      
+      for (const g of list) {
+        const dt = parseDate(g.created_at);
+        const el = document.createElement('div');
+        el.className = 'guest-card animate__animated animate__fadeIn';
+        el.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="guest-name">${escapeHtml(g.name)}</div>
+            <small class="text-muted"><i class="fas fa-clock me-1"></i>${dt ? dt.toLocaleString('vi-VN') : ''}</small>
+          </div>
+          <div class="mb-2" style="color: var(--wedding-text);">
+            <i class="fas fa-comment me-2"></i>${escapeHtml(g.message)}
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            ${getStatusBadge(g.will_attend)}
+            <span class="badge badge-status" style="background-color: #e7f3ff; color: #004085;">
+              <i class="fas fa-users me-1"></i>${escapeHtml(g.accompany||'0')} người
+            </span>
+            <span class="badge badge-status" style="background-color: #fff3e0; color: #e65100;">
+              <i class="fas fa-user-friends me-1"></i>${escapeHtml(g.guest_of||'')}
+            </span>
+          </div>
+        `;
+        container.appendChild(el);
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById('searchText').value = '';
+      document.getElementById('willAttendSelect').value = 'all';
+      document.getElementById('guestOfSelect').value = 'all';
+      document.getElementById('accompanyMin').value = '';
+      document.getElementById('accompanyMax').value = '';
+      document.getElementById('dateFrom').value = '';
+      document.getElementById('dateTo').value = '';
+      currentPage = 1;
+      renderCurrentPage();
+      showToast('Đã đặt lại bộ lọc', 'info');
+    }
+
+    function exportToExcel() {
+      try {
+        const predicate = buildFilterPredicate();
+        const filtered = lastFetched.filter(predicate);
+        if (!filtered.length) { 
+          showToast('Không có dữ liệu để xuất', 'error');
+          return; 
+        }
+
+        const rows = filtered.map(r => ({
+          'Tên': r.name || '',
+          'Lời nhắn': r.message || '',
+          'Tham dự': r.will_attend || '',
+          'Số người': r.accompany || '',
+          'Khách của': r.guest_of || '',
+          'Thời gian gửi (GMT+7)': (() => { 
+            const d = parseDate(r.created_at); 
+            return d ? d.toLocaleString('vi-VN') : (r.created_at||''); 
+          })()
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Guests');
+        const fname = `guests_${new Date().toISOString().replace(/[:.]/g,'-')}.xlsx`;
+        XLSX.writeFile(wb, fname);
+        
+        showToast(`Đã xuất ${filtered.length} khách mời ra file Excel`, 'success');
+      } catch (err) {
+        console.error('Export error', err);
+        showToast('Lỗi khi xuất file', 'error');
+      }
+    }
+
+    function printTable() {
+      showToast('Đang chuẩn bị in...', 'info');
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+
+    // Toggle advanced filters
+    document.getElementById('toggleAdvanced').addEventListener('click', function() {
+      const advFilters = document.getElementById('advancedFilters');
+      const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+      
+      if (advFilters.style.display === 'none') {
+        advFilters.style.display = 'block';
+        advFilters.classList.add('fade-in');
+        icon.className = 'fas fa-chevron-up ms-1';
+      } else {
+        advFilters.style.display = 'none';
+        icon.className = 'fas fa-chevron-down ms-1';
+      }
+    });
+
+    // Event listeners
+    document.getElementById('applyBtn').addEventListener('click', () => {
+      currentPage = 1;
+      renderCurrentPage();
+      showToast('Đã áp dụng bộ lọc', 'success');
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', resetFilters);
+    document.getElementById('exportBtn').addEventListener('click', exportToExcel);
+    document.getElementById('printBtn').addEventListener('click', printTable);
+    
+    document.getElementById('pageSize').addEventListener('change', function() {
+      pageSize = parseInt(this.value, 10);
+      currentPage = 1;
+      renderCurrentPage();
+    });
+
+    // Enter key to apply filter
+    document.getElementById('searchText').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        currentPage = 1;
+        renderCurrentPage();
+      }
+    });
+
+    // Initial load
+    fetchAndRender();
+  </script>
+</body>
+</html>
