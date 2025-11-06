@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+const { Pool } = require('pg'); // THAY ĐỔI: Sử dụng 'pg' thay vì 'mysql2'
 const path = require('path');
 
 const app = express();
@@ -11,52 +11,53 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// MySQL connection
-const db = mysql.createConnection({
-  host: 'shinkansen.proxy.rlwy.net',
-  port: 41461,
-  user: 'root',
-  password: 'BZQAVvMfOBbhtxHuuzAQxCvWoprmyjNM',
-  database: 'railway'
+// THAY ĐỔI: Cấu hình kết nối PostgreSQL
+// TODO: Cập nhật connection string cho database PostgreSQL của bạn
+// Ví dụ: 'postgresql://USER:PASSWORD@HOST:PORT/DATABASE'
+// Bạn có thể lấy connection string này từ Railway (nếu bạn dùng PG trên Railway)
+const connectionString = 'postgres://koyeb-adm:npg_pcjBze5f9Hhn@ep-crimson-water-a1t8exfm.ap-southeast-1.pg.koyeb.app/koyebdb';
+
+const pool = new Pool({
+  connectionString: connectionString,
+  // Có thể cần nếu kết nối với các dịch vụ cloud như Heroku, Railway
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-db.connect((err) => {
+// THAY ĐỔI: Kiểm tra kết nối và tự động tạo bảng (cách tiếp cận của pg)
+const createTableSQL = `CREATE TABLE IF NOT EXISTS guests (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  will_attend VARCHAR(255),
+  accompany VARCHAR(255),
+  guest_of VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)`;
+
+pool.query(createTableSQL, (err) => {
   if (err) {
-    console.error('Database connection failed:', err.stack);
-    return;
+    console.error('Failed to create guests table:', err);
+  } else {
+    console.log('Guests table ready.');
   }
-  console.log('Connected to database.');
-  
-  // Auto create guests table if not exists
-  const createTableSQL = `CREATE TABLE IF NOT EXISTS guests (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    will_attend VARCHAR(255),
-    accompany VARCHAR(255),
-    guest_of VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )`;
-  
-  db.query(createTableSQL, (err) => {
-    if (err) {
-      console.error('Failed to create guests table:', err);
-    } else {
-      console.log('Guests table ready.');
-    }
-  });
 });
 
 // API endpoint to save form data
 app.post('/api/save', (req, res) => {
   const { name, message, form_item7, form_item8, form_item9 } = req.body;
-  
+
   if (!name || !message) {
     return res.json({ success: false, message: 'Thiếu thông tin bắt buộc.' });
   }
-  
-  const sql = 'INSERT INTO guests (name, message, will_attend, accompany, guest_of) VALUES (?, ?, ?, ?, ?)';
-  db.query(sql, [name, message, form_item7, form_item8, form_item9], (err, result) => {
+
+  // THAY ĐỔI: Sử dụng $1, $2... cho placeholders
+  const sql = 'INSERT INTO guests (name, message, will_attend, accompany, guest_of) VALUES ($1, $2, $3, $4, $5)';
+  const values = [name, message, form_item7, form_item8, form_item9];
+
+  // THAY ĐỔI: Sử dụng 'pool.query'
+  pool.query(sql, values, (err, result) => {
     if (err) {
       console.error(err);
       return res.json({ success: false, message: 'Lỗi lưu dữ liệu.' });
@@ -67,12 +68,14 @@ app.post('/api/save', (req, res) => {
 
 // API: get all guests
 app.get('/api/guests', (req, res) => {
-  db.query('SELECT * FROM guests ORDER BY created_at DESC', (err, results) => {
+  // THAY ĐỔI: Sử dụng 'pool.query'
+  pool.query('SELECT * FROM guests ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json([]);
     }
-    res.json(results);
+    // THAY ĐỔI: Kết quả trả về nằm trong 'results.rows'
+    res.json(results.rows);
   });
 });
 
