@@ -57,6 +57,51 @@
       margin-top: 0.5rem;
       font-weight: 300;
     }
+
+    /* Quick Action Buttons */
+    .quick-action-section {
+      margin-bottom: 2rem;
+    }
+
+    .quick-action-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      border: 1px solid var(--wedding-border);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .quick-action-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .quick-action-icon {
+      font-size: 2rem;
+      color: var(--wedding-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-action-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--wedding-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .quick-action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .quick-action-buttons .btn {
+      flex: 1;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
     
     .filter-card {
       background: white;
@@ -202,9 +247,19 @@
       transition: all 0.2s ease;
     }
     
+    .table tbody tr {
+      cursor: pointer;
+    }
+    
     .table tbody tr:hover {
       background-color: var(--wedding-light);
-      transform: scale(1.01);
+    }
+    
+    .message-cell {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     
     .guest-card {
@@ -215,11 +270,19 @@
       border: 1px solid var(--wedding-border);
       box-shadow: 0 3px 15px rgba(0,0,0,0.05);
       transition: all 0.3s ease;
+      cursor: pointer;
     }
     
     .guest-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .message-preview {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     
     .guest-name {
@@ -266,7 +329,6 @@
       margin-bottom: 1rem;
     }
     
-    /* Loading Spinner */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -304,7 +366,6 @@
       font-weight: 500;
     }
     
-    /* Toast Notification */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -344,42 +405,241 @@
       color: var(--wedding-text);
     }
     
-    /* Pagination */
     .pagination-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 1.5rem;
-      gap: 1rem;
     }
     
     .pagination {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      padding: 0;
       margin: 0;
     }
     
-    .page-link {
-      color: var(--wedding-primary);
-      border: 1px solid var(--wedding-border);
-      padding: 0.5rem 0.75rem;
-      transition: all 0.3s ease;
+    .page-item {
+      display: inline-block;
     }
     
-    .page-link:hover {
-      background-color: var(--wedding-accent);
-      color: var(--wedding-secondary);
-      border-color: var(--wedding-primary);
+    .page-item.disabled .page-link {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     
     .page-item.active .page-link {
       background: linear-gradient(135deg, var(--wedding-primary) 0%, var(--wedding-secondary) 100%);
+      color: white;
       border-color: var(--wedding-primary);
     }
     
-    .page-size-select {
-      max-width: 120px;
+    .page-link {
+      background: white;
+      color: var(--wedding-primary);
+      border: 2px solid var(--wedding-border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      min-width: 45px;
+      text-align: center;
     }
     
-    /* Print Styles */
+    .page-link:hover:not(.disabled) {
+      background: var(--wedding-primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(90, 117, 86, 0.3);
+      border-color: var(--wedding-primary);
+    }
+    
+    .page-item.active .page-link:hover {
+      transform: none;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-overlay.show {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wedding-border);
+    }
+    
+    .modal-header-left {
+      flex: 1;
+    }
+    
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--wedding-secondary);
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .modal-subtitle {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--wedding-primary);
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .modal-info-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--wedding-text);
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      background: var(--wedding-accent);
+      color: var(--wedding-primary);
+      transform: rotate(90deg);
+    }
+    
+    .modal-body {
+      padding: 0;
+    }
+    
+    .modal-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--wedding-border);
+      flex-wrap: wrap;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--wedding-text);
+    }
+    
+    .meta-item i {
+      font-size: 1.1rem;
+    }
+    
+    .meta-item .badge-status {
+      margin: 0;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+    }
+    
+    .meta-count {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--wedding-text);
+    }
+    
+    .meta-time {
+      font-size: 0.8rem;
+      color: var(--wedding-secondary);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .meta-time i {
+      font-size: 0.85rem;
+    }
+    
+    .message-section {
+      padding: 1.5rem;
+      background: var(--wedding-light);
+      border-radius: 12px;
+      border: 1px solid var(--wedding-border);
+    }
+    
+    .message-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--wedding-secondary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .message-content {
+      color: var(--wedding-text);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      word-wrap: break-word;
+      font-weight: 400;
+    }
+    
     @media print {
       body {
         background: white;
@@ -391,7 +651,7 @@
         box-shadow: none !important;
       }
       
-      .filter-card, .pagination-wrapper, .btn, .stats-card {
+      .filter-card, .pagination-wrapper, .btn, .stats-card, .quick-action-section {
         display: none !important;
       }
       
@@ -408,7 +668,6 @@
       }
     }
     
-    /* Advanced Filters Toggle */
     .advanced-filters {
       background: var(--wedding-light);
       border-radius: 10px;
@@ -476,6 +735,44 @@
   </div>
 
   <div class="container">
+    <!-- Quick Actions -->
+    <div class="quick-action-section">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="quick-action-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+            <div class="quick-action-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="quick-action-title">Thiệp Mời</div>
+            <div class="quick-action-buttons">
+              <button class="btn btn-wedding-outline btn-sm" onclick="copyInvitationLink('thiepmoi')">
+                <i class="fas fa-copy me-1"></i>Copy Link
+              </button>
+              <button class="btn btn-wedding-primary btn-sm" onclick="openInvitationPage('thiepmoi')">
+                <i class="fas fa-eye me-1"></i>Xem
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="quick-action-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+            <div class="quick-action-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="quick-action-title">Thiệp Cưới</div>
+            <div class="quick-action-buttons">
+              <button class="btn btn-wedding-outline btn-sm" onclick="copyInvitationLink('thiepcuoi')">
+                <i class="fas fa-copy me-1"></i>Copy Link
+              </button>
+              <button class="btn btn-wedding-primary btn-sm" onclick="openInvitationPage('thiepcuoi')">
+                <i class="fas fa-eye me-1"></i>Xem
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Filter Section -->
     <div class="filter-card animate__animated animate__fadeInUp">
       <div class="filter-header">
@@ -576,7 +873,7 @@
               <button id="exportBtn" class="btn btn-wedding-primary">
                 <i class="fas fa-file-excel me-2"></i>Export Excel
               </button>
-              <button id="printBtn" style="display:none;" class="btn btn-wedding-outline">
+              <button id="printBtn" class="btn btn-wedding-outline" onclick="printTable()">
                 <i class="fas fa-print me-2"></i>In
               </button>
             </div>
@@ -615,16 +912,16 @@
 
     <!-- Desktop Table -->
     <div class="table-card d-none d-lg-block animate__animated animate__fadeInUp" id="tableView" style="animation-delay: 0.4s;">
-      <div class="table-responsive">
-        <table class="table table-hover">
+      <div style="overflow-x: auto;">
+        <table class="table table-hover" style="table-layout: fixed; width: 100%;">
           <thead>
             <tr>
-              <th><i class="fas fa-user me-2"></i>Tên</th>
-              <th><i class="fas fa-comment me-2"></i>Lời nhắn</th>
-              <th><i class="fas fa-check-circle me-2"></i>Tham dự</th>
-              <th><i class="fas fa-users me-2"></i>Số người</th>
-              <th><i class="fas fa-user-friends me-2"></i>Khách của</th>
-              <th><i class="fas fa-clock me-2"></i>Thời gian</th>
+              <th style="width: 15%;"><i class="fas fa-user me-2"></i>Tên</th>
+              <th style="width: 25%;"><i class="fas fa-comment me-2"></i>Lời nhắn</th>
+              <th style="width: 15%;"><i class="fas fa-check-circle me-2"></i>Tham dự</th>
+              <th style="width: 12%;"><i class="fas fa-users me-2"></i>Số người</th>
+              <th style="width: 15%;"><i class="fas fa-user-friends me-2"></i>Khách của</th>
+              <th style="width: 18%;"><i class="fas fa-clock me-2"></i>Thời gian</th>
             </tr>
           </thead>
           <tbody id="guestsTableBody"></tbody>
@@ -637,15 +934,6 @@
 
     <!-- Pagination -->
     <div class="pagination-wrapper" id="paginationWrapper" style="display:none;">
-      <div class="d-flex align-items-center gap-2">
-        <label class="form-label mb-0 small">Hiển thị:</label>
-        <select id="pageSize" class="form-select form-select-sm page-size-select">
-          <option value="10">10</option>
-          <option value="25" selected>25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </div>
       <ul class="pagination mb-0" id="pagination"></ul>
     </div>
 
@@ -659,6 +947,37 @@
     </div>
   </div>
 
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3 class="modal-title" id="modalName"></h3>
+          <div class="modal-info-row">
+            <p class="modal-subtitle" id="modalGuestOf"></p>
+            <div class="meta-item" id="modalAttendIcon"></div>
+            <div class="meta-item">
+              <i class="fas fa-users"></i>
+              <span class="meta-count" id="modalAccompany"></span>
+            </div>
+            <div class="meta-time" id="modalTime"></div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="message-section">
+          <div class="message-label">
+            <i class="fas fa-comment"></i> Lời nhắn
+          </div>
+          <div class="message-content" id="modalMessage"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
   
@@ -668,7 +987,7 @@
   <script>
     let lastFetched = [];
     let currentPage = 1;
-    let pageSize = 25;
+    const pageSize = 10; // Cố định 10 mục mỗi trang
 
     function showLoading() {
       document.getElementById('loadingOverlay').style.display = 'flex';
@@ -697,7 +1016,6 @@
         <div class="toast-header-custom">
           <i class="fas ${iconMap[type]} me-2" style="color: ${colorMap[type]}"></i>
           <strong class="me-auto">Thông báo</strong>
-          <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.parentElement.remove()"></button>
         </div>
         <div class="toast-body-custom">${message}</div>
       `;
@@ -708,6 +1026,48 @@
         toastEl.style.animation = 'slideInRight 0.3s ease reverse';
         setTimeout(() => toastEl.remove(), 300);
       }, 3000);
+    }
+
+    function copyInvitationLink(page) {
+      const link = window.location.origin + '/' + page;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(function() {
+          showToast('✓ Đã copy link thành công!', 'success');
+        }).catch(function(err) {
+          console.error('Copy failed:', err);
+          fallbackCopyTextToClipboard(link);
+        });
+      } else {
+        fallbackCopyTextToClipboard(link);
+      }
+    }
+    
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showToast('✓ Đã copy link thành công!', 'success');
+        } else {
+          prompt('Copy link này:', text);
+        }
+      } catch (err) {
+        prompt('Copy link này:', text);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+    
+    function openInvitationPage(page) {
+      window.open('/' + page, '_blank');
     }
 
     function parseDate(val) {
@@ -857,7 +1217,6 @@
 
       if (totalPages <= 1) return;
 
-      // Previous button
       const prevLi = document.createElement('li');
       prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
       prevLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>`;
@@ -866,11 +1225,11 @@
           e.preventDefault();
           currentPage--;
           renderCurrentPage();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         };
       }
       pagination.appendChild(prevLi);
 
-      // Page numbers
       let startPage = Math.max(1, currentPage - 2);
       let endPage = Math.min(totalPages, currentPage + 2);
 
@@ -901,7 +1260,6 @@
         pagination.appendChild(li);
       }
 
-      // Next button
       const nextLi = document.createElement('li');
       nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
       nextLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>`;
@@ -910,6 +1268,7 @@
           e.preventDefault();
           currentPage++;
           renderCurrentPage();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         };
       }
       pagination.appendChild(nextLi);
@@ -924,6 +1283,7 @@
           e.preventDefault();
           currentPage = pageNum;
           renderCurrentPage();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         };
       }
       return li;
@@ -953,12 +1313,13 @@
         const dt = parseDate(g.created_at);
         tr.innerHTML = `
           <td><strong>${escapeHtml(g.name)}</strong></td>
-          <td>${escapeHtml(g.message)}</td>
+          <td><div class="message-cell">${escapeHtml(g.message)}</div></td>
           <td>${getStatusBadge(g.will_attend)}</td>
           <td><i class="fas fa-user-friends me-1"></i>${escapeHtml(g.accompany||'0')}</td>
           <td>${escapeHtml(g.guest_of||'')}</td>
           <td><small class="text-muted">${dt ? dt.toLocaleString('vi-VN') : ''}</small></td>
         `;
+        tr.onclick = () => openModal(g);
         tbody.appendChild(tr);
       }
     }
@@ -971,12 +1332,13 @@
         const dt = parseDate(g.created_at);
         const el = document.createElement('div');
         el.className = 'guest-card animate__animated animate__fadeIn';
+        el.onclick = () => openModal(g);
         el.innerHTML = `
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div class="guest-name">${escapeHtml(g.name)}</div>
             <small class="text-muted"><i class="fas fa-clock me-1"></i>${dt ? dt.toLocaleString('vi-VN') : ''}</small>
           </div>
-          <div class="mb-2" style="color: var(--wedding-text);">
+          <div class="mb-2 message-preview" style="color: var(--wedding-text);">
             <i class="fas fa-comment me-2"></i>${escapeHtml(g.message)}
           </div>
           <div class="d-flex flex-wrap gap-2">
@@ -1047,7 +1409,54 @@
       }, 500);
     }
 
-    // Toggle advanced filters
+    function getStatusIcon(willAttend) {
+      const val = (willAttend || '').toLowerCase();
+      const willMap = {
+        yes: ['mình chắc chắn sẽ đến','chắc chắn sẽ đến','có thể đến','đi','có'],
+        no: ['xin lỗi mình bận','không tham gia','không thể']
+      };
+      
+      if (willMap.yes.some(s => val.includes(s))) {
+        return '<i class="fas fa-check-circle" style="color: #5a7556; font-size: 1.2rem;"></i>';
+      } else if (willMap.no.some(s => val.includes(s))) {
+        return '<i class="fas fa-times-circle" style="color: #dc3545; font-size: 1.2rem;"></i>';
+      } else {
+        return '<i class="fas fa-question-circle" style="color: #ffc107; font-size: 1.2rem;"></i>';
+      }
+    }
+
+    function openModal(guest) {
+      const dt = parseDate(guest.created_at);
+      document.getElementById('modalName').textContent = guest.name || '';
+      document.getElementById('modalGuestOf').textContent = guest.guest_of || '';
+      document.getElementById('modalMessage').textContent = guest.message || '';
+      document.getElementById('modalAttendIcon').innerHTML = getStatusIcon(guest.will_attend);
+      document.getElementById('modalAccompany').innerHTML = `<span style="font-style: italic;">${guest.accompany || '0'}</span>`;
+      document.getElementById('modalTime').innerHTML = `<i class="fas fa-clock"></i>${dt ? dt.toLocaleString('vi-VN') : ''}`;
+      
+      document.getElementById('detailModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('detailModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
     document.getElementById('toggleAdvanced').addEventListener('click', function() {
       const advFilters = document.getElementById('advancedFilters');
       const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
@@ -1062,7 +1471,6 @@
       }
     });
 
-    // Event listeners
     document.getElementById('applyBtn').addEventListener('click', () => {
       currentPage = 1;
       renderCurrentPage();
@@ -1071,15 +1479,7 @@
     
     document.getElementById('resetBtn').addEventListener('click', resetFilters);
     document.getElementById('exportBtn').addEventListener('click', exportToExcel);
-    document.getElementById('printBtn').addEventListener('click', printTable);
-    
-    document.getElementById('pageSize').addEventListener('change', function() {
-      pageSize = parseInt(this.value, 10);
-      currentPage = 1;
-      renderCurrentPage();
-    });
 
-    // Enter key to apply filter
     document.getElementById('searchText').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         currentPage = 1;
@@ -1087,7 +1487,6 @@
       }
     });
 
-    // Initial load
     fetchAndRender();
   </script>
 </body>
