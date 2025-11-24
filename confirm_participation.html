@@ -978,6 +978,37 @@
     </div>
   </div>
 
+  <!-- Side Selection Modal -->
+  <div class="modal-overlay" id="sideSelectionModal">
+    <div class="modal-content" style="max-width: 450px;">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3 class="modal-title" id="sideModalTitle">Chọn thiệp</h3>
+          <p class="modal-subtitle" id="sideModalSubtitle"></p>
+        </div>
+        <button class="modal-close" onclick="closeSideModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6">
+            <button class="btn btn-wedding-primary w-100 py-3" onclick="handleSideSelection('groom')" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-user-tie" style="font-size: 2rem;"></i>
+              <span>Nhà trai</span>
+            </button>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-wedding-primary w-100 py-3" onclick="handleSideSelection('bride')" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-crown" style="font-size: 2rem;"></i>
+              <span>Nhà gái</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
   
@@ -987,7 +1018,9 @@
   <script>
     let lastFetched = [];
     let currentPage = 1;
-    const pageSize = 10; // Cố định 10 mục mỗi trang
+    const pageSize = 10;
+    let sideModalAction = null;
+    let sideModalPage = null;
 
     function showLoading() {
       document.getElementById('loadingOverlay').style.display = 'flex';
@@ -1029,17 +1062,64 @@
     }
 
     function copyInvitationLink(page) {
-      const link = window.location.origin + '/' + page;
+      sideModalAction = 'copy';
+      sideModalPage = page;
+      openSideModal(page);
+    }
+    
+    function openInvitationPage(page) {
+      sideModalAction = 'view';
+      sideModalPage = page;
+      openSideModal(page);
+    }
+
+    function openSideModal(page) {
+      const titleText = page === 'thiepmoi' ? 'Thiệp Mời' : 'Thiệp Cưới';
+      const subtitleText = sideModalAction === 'copy' ? 'Chọn thiệp để copy link' : 'Chọn thiệp để xem';
       
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(link).then(function() {
-          showToast('✓ Đã copy link thành công!', 'success');
-        }).catch(function(err) {
-          console.error('Copy failed:', err);
+      document.getElementById('sideModalTitle').textContent = titleText;
+      document.getElementById('sideModalSubtitle').textContent = subtitleText;
+      document.getElementById('sideSelectionModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSideModal() {
+      document.getElementById('sideSelectionModal').classList.remove('show');
+      document.body.style.overflow = '';
+      sideModalAction = null;
+      sideModalPage = null;
+    }
+
+    function handleSideSelection(side) {
+      // Map các link tới 4 file HTML riêng biệt
+      const linkMap = {
+        'thiepmoi-groom': '/nhatrai/thiepmoi',
+        'thiepmoi-bride': '/nhagai/thiepmoi',
+        'thiepcuoi-groom': '/nhatrai/thiepcuoi',
+        'thiepcuoi-bride': '/nhagai/thiepcuoi'
+      };
+      
+      const linkKey = `${sideModalPage}-${side}`;
+      const link = `${window.location.origin}${linkMap[linkKey]}`;
+      
+      if (sideModalAction === 'copy') {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(function() {
+            const sideName = side === 'groom' ? 'nhà trai' : 'nhà gái';
+            showToast(`✓ Đã copy link ${sideName} thành công!`, 'success');
+            closeSideModal();
+          }).catch(function(err) {
+            console.error('Copy failed:', err);
+            fallbackCopyTextToClipboard(link);
+            closeSideModal();
+          });
+        } else {
           fallbackCopyTextToClipboard(link);
-        });
-      } else {
-        fallbackCopyTextToClipboard(link);
+          closeSideModal();
+        }
+      } else if (sideModalAction === 'view') {
+        window.open(link, '_blank');
+        closeSideModal();
       }
     }
     
@@ -1064,10 +1144,6 @@
       }
       
       document.body.removeChild(textArea);
-    }
-    
-    function openInvitationPage(page) {
-      window.open('/' + page, '_blank');
     }
 
     function parseDate(val) {
@@ -1450,10 +1526,21 @@
       }
     });
 
+    // Close side selection modal when clicking outside
+    document.getElementById('sideSelectionModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeSideModal();
+      }
+    });
+
     // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        closeModal();
+        if (document.getElementById('sideSelectionModal').classList.contains('show')) {
+          closeSideModal();
+        } else if (document.getElementById('detailModal').classList.contains('show')) {
+          closeModal();
+        }
       }
     });
 

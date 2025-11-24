@@ -2,83 +2,64 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { Pool } = require('pg'); // THAY ĐỔI: Sử dụng 'pg' thay vì 'mysql2'
 const path = require('path');
+// Import 1 pool và uuidv4
+const { pool, initDatabase, uuidv4 } = require('./config');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// THAY ĐỔI: Cấu hình kết nối PostgreSQL
-// TODO: Cập nhật connection string cho database PostgreSQL của bạn
-// Ví dụ: 'postgresql://USER:PASSWORD@HOST:PORT/DATABASE'
-// Bạn có thể lấy connection string này từ Railway (nếu bạn dùng PG trên Railway)
-const connectionString = 'postgres://koyeb-adm:npg_pcjBze5f9Hhn@ep-crimson-water-a1t8exfm.ap-southeast-1.pg.koyeb.app/koyebdb';
-
-const pool = new Pool({
-  connectionString: connectionString,
-  // Có thể cần nếu kết nối với các dịch vụ cloud như Heroku, Railway
-  ssl: {
-    rejectUnauthorized: false
-  }
+// Khởi tạo database khi server start
+initDatabase().catch(err => {
+  console.error('Failed to initialize database:', err);
+  process.exit(1);
 });
 
-// THAY ĐỔI: Kiểm tra kết nối và tự động tạo bảng (cách tiếp cận của pg)
-const createTableSQL = `CREATE TABLE IF NOT EXISTS guests (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  message TEXT NOT NULL,
-  will_attend VARCHAR(255),
-  accompany VARCHAR(255),
-  guest_of VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)`;
-
-pool.query(createTableSQL, (err) => {
-  if (err) {
-    console.error('Failed to create guests table:', err);
-  } else {
-    console.log('Guests table ready.');
-  }
-});
-
-// API endpoint to save form data
-app.post('/api/save', (req, res) => {
+// API endpoint to save form data (Đơn giản hóa)
+app.post('/api/save', async (req, res) => {
   const { name, message, form_item7, form_item8, form_item9 } = req.body;
 
   if (!name || !message) {
     return res.json({ success: false, message: 'Thiếu thông tin bắt buộc.' });
   }
 
-  // THAY ĐỔI: Sử dụng $1, $2... cho placeholders
-  const sql = 'INSERT INTO guests (name, message, will_attend, accompany, guest_of) VALUES ($1, $2, $3, $4, $5)';
-  const values = [name, message, form_item7, form_item8, form_item9];
+  const guestId = uuidv4();
+  const sql = 'INSERT INTO guests (id, name, message, will_attend, accompany, guest_of) VALUES (?, ?, ?, ?, ?, ?)';
+  const values = [guestId, name, message, form_item7, form_item8, form_item9];
 
-  // THAY ĐỔI: Sử dụng 'pool.query'
-  pool.query(sql, values, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.json({ success: false, message: 'Lỗi lưu dữ liệu.' });
-    }
-    res.json({ success: true });
-  });
+  try {
+    // Chỉ ghi vào 1 DB
+    await pool.query(sql, values);
+    
+    console.log(`✓ Guest saved: ${name} (ID: ${guestId})`);
+    res.json({ success: true, id: guestId });
+  } catch (err) {
+    console.error('Error saving data:', err);
+    res.json({ success: false, message: 'Lỗi lưu dữ liệu.' });
+  }
 });
 
-// API: get all guests
-app.get('/api/guests', (req, res) => {
-  // THAY ĐỔI: Sử dụng 'pool.query'
-  pool.query('SELECT * FROM guests ORDER BY created_at DESC', (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json([]);
-    }
-    // THAY ĐỔI: Kết quả trả về nằm trong 'results.rows'
-    res.json(results.rows);
-  });
+// API: get all guests (Đơn giản hóa và hiệu quả hơn)
+app.get('/api/guests', async (req, res) => {
+  // Thêm ORDER BY vào SQL để database tự sắp xếp
+  const sql = 'SELECT * FROM guests ORDER BY created_at DESC';
+  try {
+    // Chỉ lấy dữ liệu từ 1 DB
+    // Destructure [rows] từ kết quả [rows, fields]
+    const [rows] = await pool.query(sql);
+
+    // Không cần gộp hay lọc trùng lặp
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching guests:', err);
+    res.status(500).json([]);
+  }
 });
 
+// --- (Các route serve file HTML không thay đổi) ---
 // Serve admin page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'confirm_participation.html'));
@@ -89,14 +70,20 @@ app.get('/music', (req, res) => {
   res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/file/music.mp3'));
 });
 
-// Serve thiep cuoi (wedding invitation)
-app.get('/thiepcuoi', (req, res) => {
-  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepcuoi.html'));
+// NHÀ GÁI
+app.get('/nhagai/thiepcuoi', (req, res) => {
+  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepcuoi_nhagai.html'));
+});
+app.get('/nhagai/thiepmoi', (req, res) => {
+  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepmoi_nhagai.html'));
 });
 
-// Serve thiep moi (invitation card)
-app.get('/thiepmoi', (req, res) => {
-  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepmoi.html'));
+// NHÀ TRAI
+app.get('/nhatrai/thiepcuoi', (req, res) => {
+  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepcuoi_nhatrai.html'));
+});
+app.get('/nhatrai/thiepmoi', (req, res) => {
+  res.sendFile(path.join(__dirname, 'camcui.vn/congthanhwedding/thiepmoi_nhatrai.html'));
 });
 
 // Serve static files for all folders
@@ -106,10 +93,31 @@ app.use(express.static(__dirname));
 app.use((req, res) => {
   res.status(404).send('Not found');
 });
+// ----------------------------------------------------
+
+// Graceful shutdown (đóng 1 pool)
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  pool.end(() => {
+    console.log('Database pool closed');
+  });
+});
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  console.log(`Admin page: http://localhost:${port}/`);
-  console.log(`Thiệp mời: http://localhost:${port}/thiepmoi`);
-  console.log(`Thiệp cưới: http://localhost:${port}/thiepcuoi`);
+  console.log(`
+╔════════════════════════════════════════════════════════════╗
+║   🎉 Server is running on port ${port}                      ║
+║   💾 Using 1 MySQL Databases (High Availability)            ║
+╠════════════════════════════════════════════════════════════╣
+║   📊 Admin page: http://localhost:${port}/                  ║
+║                                                            ║
+║   💌 Nhà gái:                                              ║
+║      Thiệp mời: http://localhost:${port}/nhagai/thiepmoi   ║
+║      Thiệp cưới: http://localhost:${port}/nhagai/thiepcuoi  ║
+║                                                            ║
+║   🤵 Nhà trai:                                              ║
+║      Thiệp mời: http://localhost:${port}/nhatrai/thiepmoi  ║
+║      Thiệp cưới: http://localhost:${port}/nhatrai/thiepcuoi ║
+╚════════════════════════════════════════════════════════════╝
+  `);
 });
