@@ -2,7 +2,7 @@
 const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid'); // Import uuid
 
-// Chỉ giữ lại 1 connection string
+// Chỉ giữ lại 1 connection string sql heroku 2
 const db_conn = process.env.DATABASE_URL_1 || 'mysql://bzihyhgnacffc6js:ef46fe0sl8c8zem8@uc13jynhmkss3nve.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/xclxsvhwwz9xuwz8';
 
 // Tạo 1 pool duy nhất
